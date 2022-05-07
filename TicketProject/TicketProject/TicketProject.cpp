@@ -6,22 +6,34 @@ bool isLeapYear(size_t year) {
 	}
 	else {
 		if (year % 4 == 0) {
-			return true;
-		}
-		else if (year % 4 == 0 && year % 100 == 0) {
-			return false;
-		}
-		else if (year % 4 == 0 && year % 100 == 0 && year % 400 == 0) {
+			if (year % 100 == 0) {
+				return false;
+			}
+			else if (year % 100 == 0 && year % 400 == 0) {
+				return true;
+			}
 			return true;
 		}
 	}
 }
 class Date {
 private:
+	bool isMod;
 	size_t year;
 	size_t month;
 	size_t day;
+	size_t days_Max[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+	void	validateGregCalendar() {
+		if (year == 1916 && month == 4 && day >= 1 && day <= 13) {
+			day = 14;
+		}
+	}
 public:
+	Date(size_t year, size_t month, size_t day) {
+		setYear(year);
+		setMonth(month);
+		setDay(day);
+	}
 	size_t getYear() {
 		return year;
 	}
@@ -30,6 +42,26 @@ public:
 	}
 	size_t getDay() {
 		return day;
+	}
+	void setYear(size_t year) {
+		this->year = year;
+		if (isLeapYear(year)) {
+			days_Max[1] = 29;
+		}
+		isMod = true;
+	}
+	void setMonth(size_t month) {
+		if (month > 12) {
+			month = 1;
+		}
+		this->month = month;
+	}
+	void setDay(size_t day) {
+		if (day > days_Max[month - 1]) {
+			day = 1;
+		}
+		this->day = day;
+		isMod = true;
 	}
 };
 class Hall {
